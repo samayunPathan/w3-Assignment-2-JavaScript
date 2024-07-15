@@ -68,6 +68,26 @@
                     </div>
                     <input type="text" id="checkin-btn" placeholder="Checkin">
                     <input type="text" id="checkout-btn" placeholder="Checkout">
+                    <!-- ---- checkin/checkout ----   -->
+
+                    <div class="calendar-container" style="display: none;">
+                        <div class="tab-container">
+                            <button class="tab active" data-tab="dates">Dates</button>
+                            <button class="tab" data-tab="months">Months</button>
+                            <button class="tab" data-tab="flexible">Flexible</button>
+                        </div>
+                        <div id="calendar-inline"></div>
+                        <p class="instruction">Make this selection to update check-in and check-out dates</p>
+                        <div class="duration-buttons">
+                            <button data-days="0">Exact dates</button>
+                            <button data-days="1">± 1 day</button>
+                            <button data-days="2" class="active">± 2 days</button>
+                            <button data-days="3">± 3 days</button>
+                            <button data-days="7">± 7 days</button>
+                            <button data-days="14">± 14 days</button>
+                        </div>
+                    </div>
+
                     <input type="text" id="guests-btn" placeholder="Add guest">
                     <button type="submit" class="search-button" id="search-btn">
                         <i class="fa fa-search"></i>
@@ -151,16 +171,16 @@
             <div class="listing-header">
                 <h1>Comfy New Apt. in Pueblo Libre!</h1>
 
-               
+
                 <div class="listing-actions">
                     <button id="shareButton" class="action-button">
-                      <i class="fa-solid fa-arrow-up-from-bracket"></i><span class="button-text"> Share</span>
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i><span class="button-text"> Share</span>
                     </button>
                     <button id="heartButton" class="action-button">
-                      <i class="fa-regular fa-heart" id="heartIcon"></i><span class="button-text"> Share</span>
+                        <i class="fa-regular fa-heart" id="heartIcon"></i><span class="button-text"> Share</span>
                     </button>
-                  </div>
-                  
+                </div>
+
             </div>
             <div id="shareModal" class="modal">
                 <div class="modal-content">
