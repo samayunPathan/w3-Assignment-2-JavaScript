@@ -69,28 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         element.addEventListener('click', (e) => e.stopPropagation());
     };
 
-    // Flatpickr configuration
-    const flatpickrConfig = {
-        minDate: "today",
-        dateFormat: "Y-m-d",
-        clickOpens: true,
-        onClose: function (selectedDates, dateStr, instance) {
-            searchBar.classList.remove('hidden');
-        },
-        onReady: function (selectedDates, dateStr, instance) {
-            preventPropagation(instance.calendarContainer);
-        }
-    };
 
-    // Initialize Flatpickr for check-in and check-out dates
-    const checkinPicker = flatpickr(checkinInput, {
-        ...flatpickrConfig,
-        onChange: function (selectedDates, dateStr) {
-            checkoutPicker.set('minDate', dateStr);
-        }
-    });
-
-    const checkoutPicker = flatpickr(checkoutInput, flatpickrConfig);
 
     // Where input and region dropdown logic
     whereInput.addEventListener('click', function (event) {
@@ -129,7 +108,101 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-// end calender worked ----- ****** 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkinInput = document.getElementById('checkin-btn');
+    const checkoutInput = document.getElementById('checkout-btn');
+    const calendarContainer = document.querySelector('.calendar-container');
+    const tabs = document.querySelectorAll('.tab');
+    const durationButtons = document.querySelectorAll('.duration-buttons button');
+    const otherInputs = document.querySelectorAll('input:not(#checkin-btn):not(#checkout-btn)');
+    let fp = null;
+
+    function initFlatpickr() {
+        if (fp) return; // If already initialized, do nothing
+
+        fp = flatpickr("#calendar-inline", {
+            inline: true,
+            mode: "range",
+            showMonths: 1, // Adjusted to show two months for better range visibility
+            dateFormat: "Y-m-d",
+            defaultDate: ["2024-07-11", "2024-08-12"],
+            minDate: "2024-07-01",
+            maxDate: "2029-08-31",
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    checkinInput.value = instance.formatDate(selectedDates[0], "M d, Y");
+                    checkoutInput.value = instance.formatDate(selectedDates[1], "M d, Y");
+                }
+            }
+        });
+    }
+
+    function showCalendar() {
+        calendarContainer.style.display = 'block';
+        initFlatpickr();
+    }
+
+    function hideCalendar() {
+        calendarContainer.style.display = 'none';
+    }
+
+    checkinInput.addEventListener('click', function (event) {
+        event.stopPropagation();
+        showCalendar();
+    });
+
+    checkoutInput.addEventListener('click', function (event) {
+        event.stopPropagation();
+        showCalendar();
+    });
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            // Implement the logic to switch between different calendar views (dates, months, flexible) if needed
+        });
+    });
+
+    durationButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            durationButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            const days = parseInt(this.dataset.days);
+            if (fp && fp.selectedDates.length === 2) {
+                const startDate = new Date(fp.selectedDates[0]);
+                const endDate = new Date(fp.selectedDates[1]);
+
+                startDate.setDate(startDate.getDate() - days);
+                endDate.setDate(endDate.getDate() + days);
+
+                fp.setDate([startDate, endDate]);
+            }
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!calendarContainer.contains(event.target) &&
+            event.target !== checkinInput &&
+            event.target !== checkoutInput) {
+            hideCalendar();
+        }
+    });
+
+    otherInputs.forEach(input => {
+        input.addEventListener('click', function () {
+            hideCalendar();
+        });
+    });
+
+    // Prevent calendar container from closing when clicking inside it
+    calendarContainer.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+});
+
 
 // ------ guest start ---- 
 
@@ -343,7 +416,6 @@ document.addEventListener('DOMContentLoaded', function () {
         img.src = src;
     });
 });
-
 
 
 // ----------- fovarite  ------ 
