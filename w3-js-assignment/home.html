@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="myScripts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- for map calender -------------  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- end map calender ------------  -->
+
+    <title>Airbnb-style Booking Site</title>
+</head>
+
+<body>
+    <div class="page-container">
+        <header>
+            <div class="flex-container">
+                <div id="main-search-bar" class="search-bar">
+                    <button type="button" class="btn">Click Me</button>
+                    <button type="button" class="btn">Click Me</button>
+                    <button type="button" class="btn-r">Click Me</button>
+                    <button type="submit" class="search-button" id="search-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+
+                <!-- for map calender -----  -->
+                <div id="search-bar-add" class="search-bar-add hidden">
+                    <input type="text" id="where-btn" placeholder="Where" readonly>
+                    <div class="where-wrapper">
+
+                        <div id="region-dropdown" class="region-dropdown hidden">
+                            <h3>Search by region</h3>
+                            <div class="region-options">
+                                <div class="region-option" data-region="I'm flexible">
+                                    <img src="/images/world.jpg" alt="World map">
+                                    <span>I'm flexible</span>
+                                </div>
+                                <div class="region-option" data-region="Southeast Asia">
+                                    <img src="/images/southeast asia.jpg" alt="Southeast Asia map">
+                                    <span>Southeast Asia</span>
+                                </div>
+                                <div class="region-option" data-region="Canada">
+                                    <img src="/images/canada.jpg" alt="Canada map">
+                                    <span>Canada</span>
+                                </div>
+                                <div class="region-option" data-region="Europe">
+                                    <img src="/images/europe.png" alt="Europe map">
+                                    <span>Europe</span>
+                                </div>
+                                <div class="region-option" data-region="Thailand">
+                                    <img src="/images/thailand.jpg" alt="Thailand map">
+                                    <span>Thailand</span>
+                                </div>
+                                <div class="region-option" data-region="Middle East">
+                                    <img src="/images/middle east.jpg" alt="Middle East map">
+                                    <span>Middle East</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" id="checkin-btn" placeholder="Checkin">
+                    <input type="text" id="checkout-btn" placeholder="Checkout">
+                    <input type="text" id="guests-btn" placeholder="Add guest">
+                    <button type="submit" class="search-button" id="search-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+
+
+                    <!-- ----- guest dropdown -----  -->
+
+
+                    <div id="guest-dropdown" class="guest-dropdown hidden">
+                        <div class="guest-category">
+                            <div class="category-info">
+                                <h3>Adults</h3>
+                                <p>Ages 13 or above</p>
+                            </div>
+                            <div class="counter">
+                                <button class="decrement" data-type="adult" disabled>-</button>
+                                <span class="count" id="adult-count">0</span>
+                                <button class="increment" data-type="adult">+</button>
+                            </div>
+                        </div>
+                        <p class="info-text">This will increment count +1</p>
+
+                        <div class="guest-category">
+                            <div class="category-info">
+                                <h3>Children</h3>
+                                <p>Ages 2-12</p>
+                            </div>
+                            <div class="counter">
+                                <button class="decrement" data-type="child" disabled>-</button>
+                                <span class="count" id="child-count">0</span>
+                                <button class="increment" data-type="child">+</button>
+                            </div>
+                        </div>
+                        <p class="info-text">This will increment count +1 only if value is > 0<br>Otherwise it will be
+                            disabled and not clickable</p>
+
+                        <div class="guest-category">
+                            <div class="category-info">
+                                <h3>Infants</h3>
+                                <p>Under 2</p>
+                            </div>
+                            <div class="counter">
+                                <button class="decrement" data-type="infant" disabled>-</button>
+                                <span class="count" id="infant-count">0</span>
+                                <button class="increment" data-type="infant">+</button>
+                            </div>
+                        </div>
+
+                        <div class="guest-category">
+                            <div class="category-info">
+                                <h3>Pets</h3>
+                                <p>Bringing a service animal?</p>
+                            </div>
+                            <div class="counter">
+                                <button class="decrement" data-type="pet" disabled>-</button>
+                                <span class="count" id="pet-count">0</span>
+                                <button class="increment" data-type="pet">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- end guest ==== -->
+                <!-- end map calender -----  -->
+
+                <div class="profile-container">
+                    <div class="profile">
+                        <i class="fas fa-bars menu-icon"></i>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+
+        </header>
+
+        <main>
+
+            <div class="listing-header">
+                <h1>Comfy New Apt. in Pueblo Libre!</h1>
+
+               
+                <div class="listing-actions">
+                    <button id="shareButton" class="action-button">
+                      <i class="fa-solid fa-arrow-up-from-bracket"></i><span class="button-text"> Share</span>
+                    </button>
+                    <button id="heartButton" class="action-button">
+                      <i class="fa-regular fa-heart" id="heartIcon"></i><span class="button-text"> Share</span>
+                    </button>
+                  </div>
+                  
+            </div>
+            <div id="shareModal" class="modal">
+                <div class="modal-content">
+                    <h2>Share this place</h2>
+                    <p>Rental unit in Lima · ★New · 1 bedroom · 1 bed · 1 bath</p>
+                    <div class="share-options">
+                        <button id="copyLinkBtn"><i class="fa-solid fa-copy"></i> Copy Link</button>
+                        <button><i class="fa fa-envelope" aria-hidden="true"></i> Email</button>
+                        <button><i class="fa-solid fa-message"></i> Messages</button>
+                        <button><i class="fa-brands fa-facebook-messenger"></i> Messenger</button>
+                        <button><i class="fa-brands fa-twitter"></i> Twitter</button>
+                        <button><i class="fa-brands fa-facebook-f"></i> Facebook</button>
+                        <button><i class="fa-brands fa-whatsapp"></i> Whatsapp</button>
+                        <button><i class="fa-solid fa-code"></i> Embed</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ---- image ----  -->
+
+            <div class="image-gallery">
+                <div class="main-image">
+                    <img src="/images/room1.jpg" alt="Bedroom">
+                </div>
+                <div class="secondary-images">
+                    <div class="top-row">
+                        <div>
+                            <img src="/images/room2.jpg" alt="Living Room">
+                        </div>
+                        <div>
+                            <img src="/images/room2.jpg" alt="Living Room">
+                        </div>
+
+                    </div>
+                    <div class="bottom-row">
+                        <div>
+                            <img src="/images/room2.jpg" alt="Living Room">
+                        </div>
+                        <div>
+                            <img src="/images/room2.jpg" alt="Living Room">
+                        </div>
+                    </div>
+                </div>
+                <button class="show-all">Show all photos</button>
+            </div>
+
+
+
+            <div class="fullscreen-gallery" style="display: none;">
+                <button class="close-gallery">&times;</button>
+                <div class="gallery-content">
+                    <button class="prev-image">&lt;</button>
+                    <div class="fullscreen-image-container">
+                        <img src="" alt="" class="fullscreen-image">
+                    </div>
+                    <button class="next-image">&gt;</button>
+                </div>
+                <div class="image-counter">1 / 5</div>
+            </div>
+
+
+
+
+            <!-- --- end image--- -->
+
+            <div class="hosted">
+                <div class="left-side">
+                    <h3>Entire rental unit in Lima,Peru</h3>
+                    <ul>
+                        <li>2 guest</li>
+                        <li>1 room</li>
+                        <li>1 bed</li>
+                        <li>1 bath</li>
+                    </ul>
+                    <div class="inline-star">
+                        <i class="fa-solid fa-star"></i>
+                        <h5>New</h5>
+
+                    </div>
+                    <hr>
+                    <div class="left-side-1">
+                        <div class="profile-img">
+                            <img src="/images/w3.png" alt="">
+                        </div>
+                        <div class="profile-info">
+                            <div>
+                                <p class="emp">Hosted by w3engineers Ltd</p>
+                            </div>
+                            <div>
+                                <ul>
+                                    <li>Superhost</li>
+                                    <li>7 years hosting</li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="left-side-1">
+                        <div class="profile-img">
+                            <img src="/images/w3.png" alt="">
+                        </div>
+                        <div class="profile-info">
+                            <div>
+                                <p class="emp">Self check in</p>
+                            </div>
+                            <div>
+                                <p>Check yourself in the smartlock</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="left-side-1">
+                        <div class="profile-img">
+                            <img src="/images/w3.png" alt="">
+                        </div>
+                        <div class="profile-info">
+                            <div>
+                                <p class="emp">Samayun is superhero</p>
+                            </div>
+                            <p>Superhost are experient,highly rated host</p>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="right-side">
+                    <p>Add dates for prices</p>
+                    <div class="row-1">
+                        <table>
+                            <tr>
+                                <th>
+                                    <p>checkin</p>
+                                    <p>add date</p>
+                                </th>
+                                <th>
+                                    <p>checkout</p>
+                                    <p>add date</p>
+                                </th>
+                            </tr>
+                        </table>
+                        <table class="tb-2">
+                            <td>
+                                <p>guest</p>
+                                <p>1 guest</p>
+                            </td>
+                        </table>
+                    </div>
+                    <div class="row-2">
+                        <button class="check-btn">check avaiability</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="descript">
+                <p>Some info has automatically translated.<a href="url">link text</a></p>
+                <div>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui soluta quae optio temporibus ad
+                        veniam accusantium nisi dignissimos
+                        voluptate nulla harum sed vitae dolores ullam ut odio esse a quibusdam doloribus illo delectus
+                        tenetur neque, libero fugit.
+                        Sequi itaque ea velit ex aliquam impedit, ullam quo commodi vitae inventore est esse. Voluptas
+                        amet explicabo, nam cumque error
+                        velit at hic earum facere, placeat ut asperiores, a obcaecati eveniet eos quos. Reprehenderit
+                        sed cupiditate repellendus enim dolorem
+                        ipsam officia ea magnam pariatur illum adipisci corporis exercitationem,
+                        porro quod corrupti vitae. Deleniti a vitae voluptate quasi cum repudiandae iste quidem, ipsam
+                        consequuntur.</p>
+                </div>
+                <p><a href="#">See More</a></p>
+            </div>
+            <div class="bed-img">
+                <h5>Where you'll sleep ..</h5>
+                <div class="bed-img">
+                    <img src="/images/room1.jpg" alt="">
+                    <p>Bedroom</p>
+                    <p>1 Doublebed</p>
+                </div>
+            </div>
+
+            <div class="what-place">
+                <h2>What this place offers</h2>
+                <div class="amenities-list">
+                    <div class="amen-1">
+                        <div class="amenity">
+                            <span class="amenity-icon">🍽️</span>
+                            <span>Kitchen</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">📺</span>
+                            <span>TV</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">📶</span>
+                            <span>Wifi</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">🛗</span>
+                            <span>Elevator</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">🚨</span>
+                            <span class="strikethrough">Smoke alarm</span>
+                        </div>
+                    </div>
+                    <div class="amen-2">
+                        <div class="amenity">
+                            <span class="amenity-icon">🧺</span>
+                            <span>Washer</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">🧺</span>
+                            <span>Dryer</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">💨</span>
+                            <span>Hair dryer</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">🧊</span>
+                            <span>Refrigerator</span>
+                        </div>
+                        <div class="amenity">
+                            <span class="amenity-icon">🚨</span>
+                            <span class="strikethrough">Carbon monoxide alarm</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="amen-btn">Show all 32 amenities</button>
+            </div>
+            <div class="map-container">
+                <h3>WHere you'll be</h3>
+                <p>Lima,Peru</p>
+                <div class="map-img"> <img src="/images/map.png" alt="">
+                    <p><a href="#">see more</a></p>
+                </div>
+
+            </div>
+
+
+
+            <!-- ---------calender -------  -->
+            <hr>
+            <div class="calender-part">
+
+
+
+
+
+                <h1>Select check-in date</h1>
+                <p class="subtitle">Add your travel dates for exact pricing</p>
+
+                <div class="calendar-container">
+                    <div class="month">
+                        <div class="month-header">
+                            <span class="month-name">July 2024</span>
+                        </div>
+                        <div class="calendar">
+                            <div class="day-header">Su</div>
+                            <div class="day-header">Mo</div>
+                            <div class="day-header">Tu</div>
+                            <div class="day-header">We</div>
+                            <div class="day-header">Th</div>
+                            <div class="day-header">Fr</div>
+                            <div class="day-header">Sa</div>
+
+                            <div class="day disabled"></div>
+                            <div class="day">1</div>
+                            <div class="day">2</div>
+                            <div class="day">3</div>
+                            <div class="day">4</div>
+                            <div class="day">5</div>
+                            <div class="day">6</div>
+                            <div class="day">7</div>
+                            <div class="day">8</div>
+                            <div class="day">9</div>
+                            <div class="day">10</div>
+                            <div class="day">11</div>
+                            <div class="day">12</div>
+                            <div class="day">13</div>
+                            <div class="day">14</div>
+                            <div class="day">15</div>
+                            <div class="day">16</div>
+                            <div class="day">17</div>
+                            <div class="day">18</div>
+                            <div class="day">19</div>
+                            <div class="day">20</div>
+                            <div class="day">21</div>
+                            <div class="day">22</div>
+                            <div class="day">23</div>
+                            <div class="day">24</div>
+                            <div class="day">25</div>
+                            <div class="day">26</div>
+                            <div class="day">27</div>
+                            <div class="day">28</div>
+                            <div class="day">29</div>
+                            <div class="day">30</div>
+                            <div class="day">31</div>
+                        </div>
+                    </div>
+
+                    <div class="month">
+                        <div class="month-header">
+                            <span class="month-name">August 2024</span>
+                            <span class="next-month">></span>
+                        </div>
+                        <div class="calendar">
+                            <div class="day-header">Su</div>
+                            <div class="day-header">Mo</div>
+                            <div class="day-header">Tu</div>
+                            <div class="day-header">We</div>
+                            <div class="day-header">Th</div>
+                            <div class="day-header">Fr</div>
+                            <div class="day-header">Sa</div>
+
+                            <div class="day disabled"></div>
+                            <div class="day disabled"></div>
+                            <div class="day disabled"></div>
+                            <div class="day disabled"></div>
+                            <div class="day">1</div>
+                            <div class="day">2</div>
+                            <div class="day">3</div>
+                            <div class="day">4</div>
+                            <div class="day">5</div>
+                            <div class="day">6</div>
+                            <div class="day">7</div>
+                            <div class="day">8</div>
+                            <div class="day">9</div>
+                            <div class="day">10</div>
+                            <div class="day">11</div>
+                            <div class="day">12</div>
+                            <div class="day">13</div>
+                            <div class="day">14</div>
+                            <div class="day">15</div>
+                            <div class="day">16</div>
+                            <div class="day">17</div>
+                            <div class="day">18</div>
+                            <div class="day">19</div>
+                            <div class="day">20</div>
+                            <div class="day">21</div>
+                            <div class="day">22</div>
+                            <div class="day">23</div>
+                            <div class="day">24</div>
+                            <div class="day">25</div>
+                            <div class="day">26</div>
+                            <div class="day">27</div>
+                            <div class="day">28</div>
+                            <div class="day">29</div>
+                            <div class="day">30</div>
+                            <div class="day">31</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-cal-icon">📅</button>
+                    <button class="btn-cal">Clear dates</button>
+                </div>
+                <hr class="width:200% margin-left:-50%">
+                <div class="reviews">
+                    <h2>No reviews (yet)</h2>
+                    <div class="review-count">
+                        <span class="star">☆</span>
+                        <span>This host has 310 reviews for other places to stay. <span class="show-reviews">Show other
+                                reviews</span></span>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <!-- -------- end calender portion -----------  -->
+
+
+
+            <!-- -------- rating --------  -->
+            <div class="user-r">
+                <h1>Meet your Host</h1>
+                <div class="user-rating">
+                    <div class="host-card">
+                        <div class="host-card-1">
+                            <div class="host-card-1-1">
+                                <img src="/images/user-s.jpg" alt="Pranto Pathan Image" class="host-image">
+                                <div class="host-info">
+                                    <h2 class="host-name">Samayun</h2>
+                                    <span class="superhost-badge">Superhost</span>
+                                </div>
+                            </div>
+                            <div class="host-card-1-2">
+                                <div>310 Reviews</div>
+                                <div>4.92★ Rating</div>
+                                <div>7 Years hosting</div>
+                            </div>
+                        </div>
+                        <div class="host-card-2">
+                            <h3>Born in 80s</h3>
+                            <p>My work : Hospitality</p>
+                            <p>Hello world ! I love traveling I also love welcoming guest in my country,Bangladesh...
+                            </p>
+                            <p><a href="#">see more</a></p>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="co-host-card">
+                        <h3>Fernando is a Superhost</h3>
+                        <div class="superhost-info">
+                            <p>Superhosts are experienced, highly rated hosts who are committed to providing great stays
+                                for guests.</p>
+                        </div>
+                        <h3>Co-hosts</h3>
+                        <div class="co-hosts">
+
+                            <div class="co-host-images">
+                                <img src="/images/user-s.jpg" alt="Percy" class="co-host-image">
+                                <img src="/images/user-s.jpg" alt="Raul" class="co-host-image">
+                            </div>
+                        </div>
+                        <h3>Host details</h3>
+                        <div class="host-details">
+
+                            <p>Response rate: 100%<br>Responds within an hour</p>
+                        </div>
+                        <button class="message-button">Message Host</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- -------- things ------  -->
+
+            <div class="things">
+                <h3>Things to Know</h3>
+                <div class="things-to">
+
+                    <div class="col-1">
+                        <h5>house rules</h5>
+                        <p>checking after</p>
+                        <p>checking before</p>
+                        <p><a href="#">see more</a></p>
+                    </div>
+                    <div class="col-2">
+                        <h5>house rules</h5>
+                        <p>checking after</p>
+                        <p>checking before</p>
+                        <p><a href="#">see more</a></p>
+                    </div>
+                    <div class="col-3">
+                        <h5>house rules</h5>
+                        <p>checking after</p>
+                        <p>checking before</p>
+                        <p><a href="#">see more</a></p>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+        </main>
+
+        <footer>
+            <div class="footer-con">
+                <div class="breadcrumb">Peru > Lima Province > Jesús María</div>
+                <h2>Explore other options in and around Lima</h2>
+                <div class="footer-ele">
+                    <div class="options-container">
+                        <div class="option">
+                            <div class="option-name">Cieneguilla</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Punta Hermosa</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Asia</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Chaclacayo</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Barranco</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Santiago de Surco</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">San Isidro</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">San Miguel</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                        <div class="option">
+                            <div class="option-name">Lunahuaná</div>
+                            <div class="option-type">Vacation rentals</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h2>Other types of stays on Airbnb</h2>
+                    <div class="stays-container">
+                        <div class="stay">
+                            <div class="stay-name">Jesús María vacation rentals</div>
+                        </div>
+                        <div class="stay">
+                            <div class="stay-name">Jesús María monthly stays</div>
+                        </div>
+                        <div class="stay">
+                            <div class="stay-name">Apartment vacation rentals in Jesús María</div>
+                        </div>
+                        <div class="stay">
+                            <div class="stay-name">Apartment vacation rentals in Lima Province</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
